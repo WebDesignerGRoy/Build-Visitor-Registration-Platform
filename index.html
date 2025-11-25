@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Registration System - Preview</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .jumbotron {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            border: none;
+        }
+        .card-header {
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: bold;
+        }
+        .btn {
+            border-radius: 5px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+        }
+        .btn-lg {
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+        }
+        .table {
+            margin-bottom: 0;
+        }
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            color: #495057;
+        }
+        .badge {
+            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        .preview-section {
+            display: none;
+        }
+        .preview-section.active {
+            display: block;
+        }
+        .nav-tabs .nav-link {
+            border-radius: 5px 5px 0 0;
+        }
+        .preview-badge {
+            background-color: #007bff;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 0.5rem 0;
+        }
+        .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        .alert {
+            border-radius: 5px;
+            border: none;
+        }
+        .dashboard-card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+        .dashboard-card .card-body h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Visitor Registration System</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('home')">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('checkin')">Check In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('checkout')">Check Out</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('admin')">Admin</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <strong>Preview Mode:</strong> This is a demonstration of the visitor registration system. No data will be saved.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <!-- Home Section -->
+        <div id="home" class="preview-section active">
+            <div class="jumbotron">
+                <h1 class="display-4">Welcome to Your Company</h1>
+                <p class="lead">Please check in if you're a visitor or check out if you're leaving.</p>
+                <hr class="my-4">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button class="btn btn-primary btn-lg btn-block" onclick="showSection('checkin')">
+                            <i class="fas fa-sign-in-alt"></i> Check In
+                        </button>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <button class="btn btn-success btn-lg btn-block" onclick="showSection('checkout')">
+                            <i class="fas fa-sign-out-alt"></i> Check Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-users"></i> Current Visitors (3)</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Company</th>
+                                            <th>Host</th>
+                                            <th>Check-in Time</th>
+                                            <th>Badge</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>John Smith</td>
+                                            <td>Tech Solutions</td>
+                                            <td>Sarah Johnson</td>
+                                            <td>Jun 15, 2023 9:30 AM</td>
+                                            <td>BADGE-ABC123</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Emily Davis</td>
+                                            <td>Innovate Inc</td>
+                                            <td>Michael Chen</td>
+                                            <td>Jun 15, 2023 10:15 AM</td>
+                                            <td>BADGE-DEF456</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Robert Wilson</td>
+                                            <td>Global Corp</td>
+                                            <td>Jennifer Lee</td>
+                                            <td>Jun 15, 2023 11:05 AM</td>
+                                            <td>BADGE-GHI789</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Check In Section -->
+        <div id="checkin" class="preview-section">
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0"><i class="fas fa-user-plus"></i> Visitor Check-In</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="checkinForm">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="first_name">First Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="first_name" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="last_name">Last Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="last_name" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="phone">Phone</label>
+                                        <input type="text" class="form-control" id="phone">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company">Company</label>
+                                    <input type="text" class="form-control" id="company">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="host_name">Host Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="host_name" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="purpose">Purpose of Visit</label>
+                                    <textarea class="form-control" id="purpose" rows="3"></textarea>
+                                </div>
+                                
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-check"></i> Check In
+                                    </button>
+                                    <button type="button" class="btn btn-secondary btn-lg ml-2" onclick="showSection('home')">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Check Out Section -->
+        <div id="checkout" class="preview-section">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="mb-0"><i class="fas fa-sign-out-alt"></i> Visitor Check-Out</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="checkoutForm">
+                                <div class="form-group">
+                                    <label for="badge_number">Badge Number <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="badge_number" required>
+                                    <small class="form-text text-muted">Enter the badge number you received during check-in.</small>
+                                </div>
+                                
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="fas fa-check"></i> Check Out
+                                    </button>
+                                    <button type="button" class="btn btn-secondary btn-lg ml-2" onclick="showSection('home')">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Section -->
+        <div id="success" class="preview-section">
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header bg-success text-white text-center">
+                            <h4 class="mb-0"><i class="fas fa-check-circle"></i> Success!</h4>
+                        </div>
+                        <div class="card-body text-center">
+                            <div id="successMessage">
+                                <div class="alert alert-success">
+                                    <h5>Your Check-In is Complete!</h5>
+                                    <p class="mb-0">Your badge number is: <strong>BADGE-XYZ789</strong></p>
+                                </div>
+                                <p>Please keep this badge number for your check-out process.</p>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <button class="btn btn-primary" onclick="showSection('home')">
+                                    <i class="fas fa-home"></i> Return to Home
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Section -->
+        <div id="admin" class="preview-section">
+            <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="visitors-tab" data-toggle="tab" href="#visitors" role="tab">Visitors</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab">Settings</a>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="adminTabsContent">
+                <!-- Dashboard Tab -->
+                <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h2>Admin Dashboard</h2>
+                            <p class="text-muted">Welcome to the visitor registration system admin panel.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card dashboard-card bg-primary text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Visitors</h5>
+                                    <h2>247</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card dashboard-card bg-success text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Current Visitors</h5>
+                                    <h2>3</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card dashboard-card bg-info text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Today's Visitors</h5>
+                                    <h2>12</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card dashboard-card bg-warning text-white">
+                                <div class="card-body">
+                                    <h5 class="card-title">Avg. Visit Duration</h5>
+                                    <h2>45 min</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Current Visitors</h5>
+                                    <a href="#" onclick="showTab('visitors')" class="btn btn-sm btn-light">View All</a>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Company</th>
+                                                    <th>Host</th>
+                                                    <th>Check-in Time</th>
+                                                    <th>Badge</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>John Smith</td>
+                                                    <td>Tech Solutions</td>
+                                                    <td>Sarah Johnson</td>
+                                                    <td>Jun 15, 2023 9:30 AM</td>
+                                                    <td>BADGE-ABC123</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-success">
+                                                            <i class="fas fa-sign-out-alt"></i> Check Out
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Emily Davis</td>
+                                                    <td>Innovate Inc</td>
+                                                    <td>Michael Chen</td>
+                                                    <td>Jun 15, 2023 10:15 AM</td>
+                                                    <td>BADGE-DEF456</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-success">
+                                                            <i class="fas fa-sign-out-alt"></i> Check Out
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Robert Wilson</td>
+                                                    <td>Global Corp</td>
+                                                    <td>Jennifer Lee</td>
+                                                    <td>Jun 15, 2023 11:05 AM</td>
+                                                    <td>BADGE-GHI789</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-success">
+                                                            <i class="fas fa-sign-out-alt"></i> Check Out
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Visitors Tab -->
+                <div class="tab-pane fade" id="visitors" role="tabpanel">
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h2>Manage Visitors</h2>
+                            <p class="text-muted">View and manage all visitor records.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Visitor Records</h5>
+                                    <div>
+                                        <button class="btn btn-sm btn-light" onclick="showTab('dashboard')">
+                                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Search Form -->
+                                    <div class="mb-4">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Search visitors...">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" type="button">
+                                                    <i class="fas fa-search"></i> Search
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Visitors Table -->
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Company</th>
+                                                    <th>Host</th>
+                                                    <th>Check-in</th>
+                                                    <th>Check-out</th>
+                                                    <th>Status</th>
+                                                    <th>Badge</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>245</td>
+                                                    <td>John Smith</td>
+                                                    <td>john@techsolutions.com</td>
+                                                    <td>Tech Solutions</td>
+                                                    <td>Sarah Johnson</td>
+                                                    <td>Jun 15, 2023 9:30 AM</td>
+                                                    <td>-</td>
+                                                    <td><span class="badge badge-success">Checked In</span></td>
+                                                    <td>BADGE-ABC123</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-success">
+                                                            <i class="fas fa-sign-out-alt"></i> Check Out
+                                                        </button>
+                                                        <button class="btn btn-sm btn-info">
+                                                            <i class="fas fa-eye"></i> Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>244</td>
+                                                    <td>Emily Davis</td>
+                                                    <td>emily@innovate.com</td>
+                                                    <td>Innovate Inc</td>
+                                                    <td>Michael Chen</td>
+                                                    <td>Jun 15, 2023 10:15 AM</td>
+                                                    <td>-</td>
+                                                    <td><span class="badge badge-success">Checked In</span></td>
+                                                    <td>BADGE-DEF456</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-success">
+                                                            <i class="fas fa-sign-out-alt"></i> Check Out
+                                                        </button>
+                                                        <button class="btn btn-sm btn-info">
+                                                            <i class="fas fa-eye"></i> Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>243</td>
+                                                    <td>Robert Wilson</td>
+                                                    <td>robert@global.com</td>
+                                                    <td>Global Corp</td>
+                                                    <td>Jennifer Lee</td>
+                                                    <td>Jun 15, 2023 11:05 AM</td>
+                                                    <td>-</td>
+                                                    <td><span class="badge badge-success">Checked In</span></td>
+                                                    <td>BADGE-GHI789</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-success">
+                                                            <i class="fas fa-sign-out-alt"></i> Check Out
+                                                        </button>
+                                                        <button class="btn btn-sm btn-info">
+                                                            <i class="fas fa-eye"></i> Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>242</td>
+                                                    <td>Lisa Anderson</td>
+                                                    <td>lisa@anderson.com</td>
+                                                    <td>Anderson Consulting</td>
+                                                    <td>David Brown</td>
+                                                    <td>Jun 14, 2023 2:30 PM</td>
+                                                    <td>Jun 14, 2023 4:15 PM</td>
+                                                    <td><span class="badge badge-secondary">Checked Out</span></td>
+                                                    <td>BADGE-JKL012</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-info">
+                                                            <i class="fas fa-eye"></i> Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>241</td>
+                                                    <td>James Taylor</td>
+                                                    <td>james@taylor.com</td>
+                                                    <td>Taylor Industries</td>
+                                                    <td>Amanda White</td>
+                                                    <td>Jun 14, 2023 10:00 AM</td>
+                                                    <td>Jun 14, 2023 12:30 PM</td>
+                                                    <td><span class="badge badge-secondary">Checked Out</span></td>
+                                                    <td>BADGE-MNO345</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-info">
+                                                            <i class="fas fa-eye"></i> Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <!-- Pagination -->
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination justify-content-center">
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                            </li>
+                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">Next</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Tab -->
+                <div class="tab-pane fade" id="settings" role="tabpanel">
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h2>System Settings</h2>
+                            <p class="text-muted">Configure system-wide settings and preferences.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-8 mx-auto">
+                            <div class="card">
+                                <div class="card-header bg-dark text-white">
+                                    <h5 class="mb-0">System Configuration</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="site_title">Site Title</label>
+                                            <input type="text" class="form-control" id="site_title" value="Visitor Registration System">
+                                            <small class="form-text text-muted">This appears in the browser title and header of the site.</small>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="company_name">Company Name</label>
+                                            <input type="text" class="form-control" id="company_name" value="Your Company">
+                                            <small class="form-text text-muted">Your company or organization name.</small>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="admin_email">Admin Email</label>
+                                            <input type="email" class="form-control" id="admin_email" value="admin@example.com">
+                                            <small class="form-text text-muted">Email address for system notifications.</small>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="checkin_notification" checked>
+                                                <label class="custom-control-label" for="checkin_notification">Send Check-in Notifications</label>
+                                            </div>
+                                            <small class="form-text text-muted">Send email notification when a visitor checks in.</small>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="checkout_notification" checked>
+                                                <label class="custom-control-label" for="checkout_notification">Send Check-out Notifications</label>
+                                            </div>
+                                            <small class="form-text text-muted">Send email notification when a visitor checks out.</small>
+                                        </div>
+                                        
+                                        <div class="form-group text-center">
+                                            <button type="button" class="btn btn-primary">
+                                                <i class="fas fa-save"></i> Save Settings
+                                            </button>
+                                            <button type="button" class="btn btn-secondary ml-2" onclick="showTab('dashboard')">
+                                                <i class="fas fa-times"></i> Cancel
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Your Company</h5>
+                    <p>&copy; 2025 Your Company. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-right">
+                    <p>Visitor Registration System</p>
+                    <p>
+                        <a href="#" class="text-white">Admin Panel</a> | 
+                        <a href="#" class="text-white">Privacy Policy</a> | 
+                        <a href="#" class="text-white">Terms of Service</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        // Show section function
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.preview-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // If admin section, show dashboard tab by default
+            if (sectionId === 'admin') {
+                showTab('dashboard');
+            }
+        }
+        
+        // Show tab function
+        function showTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-pane').forEach(tab => {
+                tab.classList.remove('show', 'active');
+            });
+            
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('show', 'active');
+            
+            // Add active class to corresponding nav link
+            document.querySelector(`[href="#${tabId}"]`).classList.add('active');
+        }
+        
+        // Handle check-in form submission
+        document.getElementById('checkinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Generate a random badge number
+            const badgeNumber = 'BADGE-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+            
+            // Update success message
+            document.getElementById('successMessage').innerHTML = `
+                <div class="alert alert-success">
+                    <h5>Your Check-In is Complete!</h5>
+                    <p class="mb-0">Your badge number is: <strong>${badgeNumber}</strong></p>
+                </div>
+                <p>Please keep this badge number for your check-out process.</p>
+            `;
+            
+            // Show success section
+            showSection('success');
+        });
+        
+        // Handle check-out form submission
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Update success message
+            document.getElementById('successMessage').innerHTML = `
+                <div class="alert alert-success">
+                    <h5>Check-Out Complete!</h5>
+                    <p class="mb-0">Thank you for visiting us today.</p>
+                </div>
+            `;
+            
+            // Show success section
+            showSection('success');
+        });
+        
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            $(".alert").fadeOut();
+        }, 5000);
+    </script>
+</body>
+</html>
